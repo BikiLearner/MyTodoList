@@ -1,3 +1,5 @@
+package com.example.mytodolist.adapter
+
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -6,11 +8,10 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.mytodolist.AddNewTask
+import com.example.mytodolist.Ui.AddNewTask
 import com.example.mytodolist.R
 import com.example.mytodolist.database.TodoDataClass
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.NonDisposableHandle.parent
 import java.sql.Time
 import java.text.SimpleDateFormat
 import java.util.Locale

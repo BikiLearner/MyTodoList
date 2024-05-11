@@ -19,13 +19,13 @@
         android:theme="@style/Theme.MyTODOList"
         tools:targetApi="31">
         <activity
-            android:name=".AllTaskActivity"
+            android:name=".Ui.AllTaskActivity"
             android:exported="false" />
         <activity
-            android:name=".AddNewTask"
+            android:name=".Ui.AddNewTask"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Ui.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,7 +34,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".AlarmReceiver"/>
+        <receiver android:name=".functionallity.AlarmReceiver"/>
 
         <meta-data
             android:name="preloaded_fonts"

@@ -1,4 +1,4 @@
-package com.example.mytodolist
+package com.example.mytodolist.functionallity
 
 import android.Manifest
 import android.app.AlarmManager
@@ -10,10 +10,10 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.service.notification.StatusBarNotification
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.example.mytodolist.R
 import com.example.mytodolist.database.TodoDataClass
 import java.util.Calendar
 

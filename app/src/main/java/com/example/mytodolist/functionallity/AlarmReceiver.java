@@ -1,7 +1,7 @@
-package com.example.mytodolist;
+package com.example.mytodolist.functionallity;
 
-import static com.example.mytodolist.AlarmFileKt.cancelAlarm;
-import static com.example.mytodolist.AlarmFileKt.showNotification;
+import static com.example.mytodolist.functionallity.AlarmFileKt.cancelAlarm;
+import static com.example.mytodolist.functionallity.AlarmFileKt.showNotification;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

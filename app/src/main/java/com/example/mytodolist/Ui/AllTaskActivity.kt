@@ -1,27 +1,23 @@
-package com.example.mytodolist
+package com.example.mytodolist.Ui
 
 import android.app.DatePickerDialog
-import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mytodolist.R
 import com.example.mytodolist.database.TodoDataClass
 import com.example.mytodolist.database.TodoViewModel
-import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
-import java.util.Locale
 
 class AllTaskActivity : AppCompatActivity() {
     private lateinit var todoViewModel: TodoViewModel
