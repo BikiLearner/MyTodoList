@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".MainActivity">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarHomepage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/toolbardraw"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Homepage"
+            android:textSize="24sp"
+            android:fontFamily="@font/manrope_extrabold"
+            android:textColor="#528297"
+            android:layout_gravity="center"
+            />
+
+    </com.google.android.material.appbar.MaterialToolbar>
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/taskStatusCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#528297"
+        app:cardCornerRadius="2dp"
+        android:layout_margin="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarHomepage"
+        >
+        <LinearLayout
+            android:layout_margin="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Today's progress \nsummary!"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:fontFamily="@font/manrope_semibold"/>
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/viewAllTaskButton"
+                android:layout_marginTop="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View Task"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:backgroundTint="#004c6c"
+                android:fontFamily="@font/manrope_semibold"/>
+
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center_vertical"
+            >
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/circularTaskIndicator"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:indicatorSize="100dp"
+                app:indicatorInset="20dp"
+                app:trackThickness="8dp"
+                app:trackColor="@color/white"
+                app:indicatorColor="#0f5f78"
+                app:indicatorDirectionCircular="counterclockwise"
+                app:trackCornerRadius="20dp"
+                android:max="12"
+                android:progress="5"
+                android:layout_margin="10dp"
+
+                />
+            <TextView
+                android:id="@+id/percentageCompleted"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:textColor="@color/white"
+                android:text="85%"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+    <RelativeLayout
+        android:id="@+id/llTask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/taskStatusCard"
+        android:layout_margin="10dp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Today's Task"
+            android:fontFamily="@font/manrope_extrabold"
+            android:textSize="20sp"
+
+            />
+        <TextView
+            android:id="@+id/seeAllTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="See All"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:textStyle="bold"
+            android:textColor="@android:color/darker_gray"/>
+    </RelativeLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/todoTaskRv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/llTask"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="20dp"
+        />
+
+    <TextView
+        android:id="@+id/tvNoTask"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/manrope_extrabold"
+        android:text="There is no Task today\nHappy rest day\n😊"
+        android:textAlignment="center"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/llTask" />
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addNewTaskButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/baseline_add_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:backgroundTint="@color/darkBlue"
+        android:layout_margin="40dp"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

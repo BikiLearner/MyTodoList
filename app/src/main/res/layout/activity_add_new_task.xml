@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".AddNewTask">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbarAddAndEditTask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/toolbardraw"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/toolBarTitleAddOrEditTask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/manrope_extrabold"
+            android:text="AddTask"
+            android:textColor="#528297"
+            android:textSize="24sp" />
+        <ImageButton
+            android:id="@+id/backButtonAddTask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_arrow_back_24"
+            android:background="#e6f8f7"/>
+        <ImageButton
+            android:id="@+id/deleteTaskButtonEditTask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/baseline_delete_outline_24"
+            android:background="#e6f8f7"/>
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <LinearLayout
+        android:id="@+id/llTaskName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="@color/white"
+        android:orientation="vertical"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/toolbarAddAndEditTask">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Task Name"
+            android:fontFamily="@font/manrope_extrabold"
+            android:textSize="18sp"
+            android:textColor="@color/darkGreen" />
+
+            <EditText
+                android:id="@+id/taskNameEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittextbackground"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/black"
+                />
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/lltaskDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="@color/white"
+        android:orientation="vertical"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/llTaskName">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date &amp; Time"
+            android:fontFamily="@font/manrope_extrabold"
+            android:textSize="18sp"
+            android:textColor="@color/darkGreen" />
+
+        <TextView
+            android:id="@+id/DateAndTimeEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittextbackground"
+            android:layout_marginTop="10dp"
+            android:focusable="true"
+            android:clickable="true"
+            android:textColor="@color/black"
+            android:drawableEnd="@drawable/baseline_calendar_month_24"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llTaskTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="@color/white"
+        android:orientation="horizontal"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/lltaskDate">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_marginEnd="10dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="start Time"
+                android:fontFamily="@font/manrope_extrabold"
+                android:textSize="18sp"
+                android:textColor="@color/darkGreen" />
+
+            <TextView
+                android:id="@+id/startTimeEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittextbackground"
+                android:layout_marginTop="10dp"
+                android:focusable="false"
+                android:textColor="@color/black"
+                android:drawableEnd="@drawable/baseline_arrow_drop_down_24"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:layout_marginStart="10dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="End Time"
+                android:fontFamily="@font/manrope_extrabold"
+                android:textSize="18sp"
+                android:textColor="@color/darkGreen" />
+
+            <TextView
+                android:id="@+id/endTimeEditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edittextbackground"
+                android:layout_marginTop="10dp"
+                android:focusable="false"
+                android:textColor="@color/black"
+                android:drawableEnd="@drawable/baseline_arrow_drop_down_24"
+                />
+        </LinearLayout>
+
+
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/llDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
+        android:backgroundTint="@color/white"
+        android:orientation="vertical"
+        app:cardCornerRadius="10dp"
+        app:cardElevation="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/llTaskTime">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:fontFamily="@font/manrope_extrabold"
+            android:textSize="18sp"
+            android:textColor="@color/darkGreen" />
+
+        <EditText
+            android:id="@+id/editTextDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittextbackground"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/black"
+            />
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/saveOrEditButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cornerRadius="4dp"
+        android:text="Save Task"
+        android:padding="10dp"
+        android:textSize="24dp"
+        android:textColor="@color/white"
+        android:backgroundTint="@color/darkBlue"
+        android:layout_margin="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

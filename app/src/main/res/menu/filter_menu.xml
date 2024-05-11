@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/AllTask"
+        android:title="All Tasks" />
+    <item
+        android:id="@+id/acen"
+        android:title="Sort by Date Ascending" />
+    <item
+        android:id="@+id/dsen"
+        android:title="Sort by Date Descending" />
+    <item
+        android:id="@+id/completed"
+        android:title="Completed Tasks" />
+    <item
+        android:id="@+id/notCompleted"
+        android:title="Incomplete Tasks" />
+    <item
+        android:id="@+id/calender"
+        android:title="Select Date (Calendar)" />
+</menu>

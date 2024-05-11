@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Shape with elevation -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:bottomLeftRadius="20dp" android:bottomRightRadius="20dp"/>
+
+            <solid android:color="@android:color/darker_gray"/>
+        </shape>
+    </item>
+    <!-- Shadow for elevation -->
+    <item android:top="0dp" android:left="0dp" android:right="0dp" android:bottom="1dp">
+        <shape android:shape="rectangle">
+            <corners android:bottomLeftRadius="20dp" android:bottomRightRadius="20dp"/>
+            <solid android:color="@color/white"/> <!-- Change color as needed -->
+        </shape>
+    </item>
+</layer-list>
