@@ -12,9 +12,9 @@ MyTODOLIst is a task management application designed to help users organize thei
 ## Tech Stack
 
 <div align="center">
-    <img src="https://github.com/BikiLearner/MyTodoList/assets/tech-stack/kotlin.png" width="50" alt="Kotlin">
-    <img src="https://github.com/BikiLearner/MyTodoList/assets/tech-stack/xml.png" width="50" alt="XML">
-    <img src="https://github.com/BikiLearner/MyTodoList/assets/tech-stack/java.png" width="50" alt="Java">
+     <img src="https://github.com/devicons/devicon/blob/master/icons/kotlin/kotlin-original.svg" width="50" alt="Kotlin">
+    <img src="https://github.com/devicons/devicon/blob/master/icons/xml/xml-original.svg" width="50" alt="XML">
+    <img src="https://github.com/devicons/devicon/blob/master/icons/java/java-original-wordmark.svg" width="50" alt="Java">
 </div>
 
 
