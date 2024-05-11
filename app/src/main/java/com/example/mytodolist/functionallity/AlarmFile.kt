@@ -80,7 +80,7 @@ fun showNotification(context: Context, todoId: Int, taskName: String, taskDesc: 
     )
     builder = NotificationCompat.Builder(context, CANNELID)
         .setSmallIcon(R.drawable.app_logo)
-        .setContentTitle(taskName)
+        .setContentTitle("Your Task : $taskName")
         .setContentText(taskDesc)
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setOngoing(true)
