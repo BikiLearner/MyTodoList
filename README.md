@@ -1,4 +1,7 @@
-[![My first design](https://github.com/BikiLearner/MyTodoList/assets/97147323/98b8a8f5-300f-4e5a-94c4-da9dfb5bd39c)](https://github.com/BikiLearner/MyTodoList/assets/97147323/98b8a8f5-300f-4e5a-94c4-da9dfb5bd39c)
+<div align="center">
+    <img src="https://github.com/BikiLearner/MyTodoList/assets/97147323/98b8a8f5-300f-4e5a-94c4-da9dfb5bd39c" width="100" alt="MyTODOLIst Logo">
+</div>
+
 # MyTODOLIst
 
 MyTODOLIst is a task management application designed to help users organize their daily tasks efficiently. With MyTODOLIst, you can create new tasks, check the status of today's tasks, edit tasks, receive notifications for upcoming tasks, and filter tasks based on various criteria.
@@ -13,11 +16,10 @@ MyTODOLIst is a task management application designed to help users organize thei
 ## Tech Stack
 
 <div align="center">
-     <img src="https://github.com/devicons/devicon/blob/master/icons/kotlin/kotlin-original.svg" width="50" alt="Kotlin">
+    <img src="https://github.com/devicons/devicon/blob/master/icons/kotlin/kotlin-original.svg" width="50" alt="Kotlin">
     <img src="https://github.com/devicons/devicon/blob/master/icons/xml/xml-original.svg" width="50" alt="XML">
     <img src="https://github.com/devicons/devicon/blob/master/icons/java/java-original-wordmark.svg" width="50" alt="Java">
 </div>
-
 
 ## Screens
 
@@ -30,5 +32,4 @@ MyTODOLIst is a task management application designed to help users organize thei
 </div>
 
 ## APK Download
-You can download the MyTODOLIst APK from [here]([https://example.com/MyTODOLIst.apk](https://github.com/BikiLearner/MyTodoList/releases/download/todoapp/MyTODOList.apk)).
-
+You can download the MyTODOLIst APK from [here](https://github.com/BikiLearner/MyTodoList/releases/download/todoapp/MyTODOList.apk).
