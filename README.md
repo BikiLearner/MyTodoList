@@ -1,4 +1,24 @@
-# Screens
+# MyTODOLIst
+
+MyTODOLIst is a task management application designed to help users organize their daily tasks efficiently. With MyTODOLIst, you can create new tasks, check the status of today's tasks, edit tasks, receive notifications for upcoming tasks, and filter tasks based on various criteria.
+
+## Features
+- Create new tasks
+- Check status of today's tasks
+- Edit tasks
+- Receive notifications for upcoming tasks
+- Filter tasks based on criteria
+
+## Tech Stack
+
+<div align="center">
+    <img src="https://github.com/BikiLearner/MyTodoList/assets/tech-stack/kotlin.png" width="50" alt="Kotlin">
+    <img src="https://github.com/BikiLearner/MyTodoList/assets/tech-stack/xml.png" width="50" alt="XML">
+    <img src="https://github.com/BikiLearner/MyTodoList/assets/tech-stack/java.png" width="50" alt="Java">
+</div>
+
+
+## Screens
 
 <div align="center">
     <img src="https://github.com/BikiLearner/MyTodoList/assets/97147323/8189286f-dc9a-4cc1-8114-e6f1cf89ce24" width="200" alt="Screenshot 1">
