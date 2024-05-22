@@ -6,5 +6,6 @@ enum class NotifyEnum(s: String) {
     ALARMSTART("com.example.mytodolist.ALARM"),
     MARKCOMPLETETODO("MarkCompleteTodo"),
     STOPALARM("StopAlarm"),
-    todoId("TODOID")
+    todoId("TODOID"),
+    todoUniqueId("TODOUniqeID")
 }

@@ -1,6 +1,7 @@
 package com.example.mytodolist.database
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -62,10 +63,9 @@ class TodoViewModel @Inject constructor(private val repo: TodoRepo) : ViewModel(
                     ),
                     uniqueNotificationID = notificationId
                 )
-                scheduleAlarm(context,todoDataClass)
-                addOrUpdateTodo(todoDataClass)
+                addOrUpdateTodo(todoDataClass,context)
             }else{
-                val todoDataClass = com.example.mytodolist.database.dataClass.TodoDataClass(
+                val todoDataClass = TodoDataClass(
                     todoId = todoId,
                     taskName = taskName,
                     taskDesc = taskDesc,
@@ -75,8 +75,8 @@ class TodoViewModel @Inject constructor(private val repo: TodoRepo) : ViewModel(
                     categoryID = categoryId,
                     uniqueNotificationID = notificationId
                 )
-                scheduleAlarm(context,todoDataClass)
-                addOrUpdateTodo(todoDataClass)
+                addOrUpdateTodo(todoDataClass, context)
+
             }
         }
     }
@@ -192,9 +192,15 @@ class TodoViewModel @Inject constructor(private val repo: TodoRepo) : ViewModel(
         }
     }
 
-    fun addOrUpdateTodo(todoDataClass: TodoDataClass) {
+    fun addOrUpdateTodo(todoDataClass: TodoDataClass, context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
-            repo.createOrUpdate(todoDataClass)
+            val id = repo.createOrUpdate(todoDataClass)
+            Log.e("TheNewTodoID", "addOrUpdateTodo: $id")
+            if(id!=-1L){
+                scheduleAlarm(context,todoDataClass.copy(
+                    todoId = id
+                ))
+            }
         }
     }
 
@@ -217,7 +223,7 @@ class TodoViewModel @Inject constructor(private val repo: TodoRepo) : ViewModel(
             deleteTodo(todoDelete)
         }, { todoUpdateClass ->
             val updatedTask = todoUpdateClass.copy(isComplete = true)
-            addOrUpdateTodo(updatedTask)
+            addOrUpdateTodo(updatedTask, context)
         })
         recyclerView.layoutManager = linearLayoutManager
         recyclerView.adapter = adapter

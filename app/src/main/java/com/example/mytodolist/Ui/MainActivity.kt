@@ -121,6 +121,9 @@ class MainActivity : AppCompatActivity() {
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            requestPermissions(arrayOf(Manifest.permission.FOREGROUND_SERVICE), 123)
+        }
     }
 
     private val requestPermissionLauncher = registerForActivityResult(

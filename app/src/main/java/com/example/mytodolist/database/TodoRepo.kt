@@ -26,8 +26,8 @@ class TodoRepo @Inject constructor(
     suspend fun deleteCategory(todoCategory: TodoCategory):Int{
         return todoCategoryDao.deleteCategory(todoCategory)
     }
-    suspend fun createOrUpdate(todoDataClass: TodoDataClass) {
-        todoDao.insertOrUpdate(todoDataClass)
+    suspend fun createOrUpdate(todoDataClass: TodoDataClass):Long {
+       return todoDao.insertOrUpdate(todoDataClass)
     }
 
 

@@ -14,23 +14,26 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.mytodolist.R
-import com.example.mytodolist.database.TodoDataClass
-import java.util.Calendar
+import com.example.mytodolist.database.dataClass.TodoDataClass
 
-const val CANNELID = "MyNotification"
-lateinit var builder:NotificationCompat.Builder
+import com.example.mytodolist.enums.NotifyEnum
+import java.util.Calendar
+import java.util.Random
+
+
 fun scheduleAlarm(context: Context, todo: TodoDataClass) {
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     val intent = Intent(context, AlarmReceiver::class.java).apply {
-        action = "com.example.mytodolist.ALARM"
-        putExtra("todoId", todo.todoId)
+        action = NotifyEnum.ALARMSTART.name
+        putExtra(NotifyEnum.todoId.name, todo.todoId)
+        putExtra(NotifyEnum.todoUniqueId.name, todo.uniqueNotificationID)
         putExtra("taskName", todo.taskName)
         putExtra("taskDesc", todo.taskDesc)
     }
 
     val pendingIntent = PendingIntent.getBroadcast(
-        context, todo.todoId,
+        context, todo.uniqueNotificationID,
         intent, PendingIntent.FLAG_IMMUTABLE
     )
 
@@ -49,41 +52,34 @@ fun scheduleAlarm(context: Context, todo: TodoDataClass) {
 
 }
 
-fun cancelAlarm(context: Context, todoId: Int) {
+fun cancelAlarm(context: Context, uniqueNotificationID: Int) {
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
     val intent = Intent(context, AlarmReceiver::class.java).apply {
-        action = "com.example.mytodolist.ALARM"
-        putExtra("todoId", todoId)
+        action = NotifyEnum.ALARMSTART.name
+        putExtra(NotifyEnum.todoId.name, uniqueNotificationID)
 
     }
     val pendingIntent = PendingIntent.getBroadcast(
-        context, todoId,
+        context,  uniqueNotificationID,
         intent, PendingIntent.FLAG_IMMUTABLE
     )
     alarmManager.cancel(pendingIntent)
 }
 
-fun showNotification(context: Context, todoId: Int, taskName: String, taskDesc: String) {
-    createNotificationChannel(context)
-
-
-    val intent1 = Intent(context, AlarmReceiver::class.java).apply {
-        action = "StopAlarm"
-        putExtra("todoId", todoId)
-    }
-
-
-    val pendingIntentStopAlarm = PendingIntent.getBroadcast(
-        context, todoId,
-        intent1, PendingIntent.FLAG_IMMUTABLE
-    )
-    builder = NotificationCompat.Builder(context, CANNELID)
+fun updateNotificationAfterMarkComplete(
+    context: Context,
+    uniqueNotificationID: Int,
+    taskName: String,
+    taskDesc: String
+) {
+    val builder = NotificationCompat.Builder(context, NotifyEnum.NotificationChannelID.name)
         .setSmallIcon(R.drawable.app_logo)
-        .setContentTitle("Your Task : $taskName")
-        .setContentText(taskDesc)
+        .setContentTitle("Task Completed: $taskName") // Changed title
+        .setContentText("Nice work! You've completed the task: $taskDesc") // Changed text
         .setPriority(NotificationCompat.PRIORITY_HIGH)
-        .setOngoing(true)
+        .setCategory(NotificationCompat.CATEGORY_REMINDER)
+        .setOngoing(false)
 
     with(NotificationManagerCompat.from(context)) {
         if (ActivityCompat.checkSelfPermission(
@@ -93,9 +89,44 @@ fun showNotification(context: Context, todoId: Int, taskName: String, taskDesc: 
         ) {
             return
         }
-        notify(todoId, builder.build())
+        notify(uniqueNotificationID, builder.build())
     }
 }
+fun showNotification(context: Context, todoId: Long,uniqueNotificationID: Int, taskName: String, taskDesc: String) {
+    createNotificationChannel(context)
+
+
+    val intentForMarkComplete = Intent(context, AlarmReceiver::class.java).apply {
+        action = NotifyEnum.MARKCOMPLETETODO.name
+        putExtra(NotifyEnum.todoId.name, todoId)
+        putExtra("taskName", taskName)
+        putExtra("taskDesc", taskDesc)
+    }
+
+
+    val pendingIntentMarkComplete = PendingIntent.getBroadcast(
+        context, uniqueNotificationID,
+        intentForMarkComplete, PendingIntent.FLAG_IMMUTABLE
+    )
+    val builder = NotificationCompat.Builder(context, NotifyEnum.NotificationChannelID.name)
+        .setSmallIcon(R.drawable.app_logo)
+        .setContentTitle("Your Task : $taskName")
+        .setContentText(taskDesc)
+        .setPriority(NotificationCompat.PRIORITY_HIGH)
+        .setCategory(NotificationCompat.CATEGORY_REMINDER)
+        .setOngoing(true)
+        .addAction(R.drawable.taskdone,"MarkComplete",pendingIntentMarkComplete)
+
+    with(NotificationManagerCompat.from(context)) {
+        if (ActivityCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) { return }
+        notify(uniqueNotificationID, builder.build())
+    }
+}
+
 
 
 fun createNotificationChannel(context: Context) {
@@ -103,18 +134,14 @@ fun createNotificationChannel(context: Context) {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val importance = NotificationManager.IMPORTANCE_HIGH
         val channel = NotificationChannel(
-            CANNELID,
-            "MyNotificationG88",
+            NotifyEnum.NotificationChannelID.name,
+            NotifyEnum.MY_NOTIFICATION_CHANNEL_NAME.name,
             importance
         )
         channel.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-        // Register the channel with the system; you can't change the importance
-        // or other notification behaviors after this
         val notificationManager = context.getSystemService(NotificationManager::class.java)
         notificationManager.createNotificationChannel(channel)
 
     }
-
-
 }
 
