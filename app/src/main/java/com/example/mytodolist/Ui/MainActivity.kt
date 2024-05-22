@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
@@ -14,6 +15,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mytodolist.R
 import com.example.mytodolist.database.TodoViewModel
@@ -21,9 +23,10 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.progressindicator.CircularProgressIndicator
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Date
 
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var todoViewModel: TodoViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        todoViewModel = TodoViewModel(application)
+        todoViewModel= ViewModelProvider(this)[TodoViewModel::class.java]
 
         val addNewTaskButton = findViewById<FloatingActionButton>(R.id.addNewTaskButton)
         addNewTaskButton.setOnClickListener {
@@ -109,7 +112,7 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun permissionNotification(context: Context) {
-        with(NotificationManagerCompat.from(context)) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Adjust the version as needed
             if (ActivityCompat.checkSelfPermission(
                     context,
                     Manifest.permission.POST_NOTIFICATIONS

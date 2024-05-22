@@ -1,22 +1,60 @@
 package com.example.mytodolist.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Query
+import com.example.mytodolist.database.daos.TodoCategoryDao
+import com.example.mytodolist.database.daos.TodoDao
+import com.example.mytodolist.database.dataClass.TodoCategory
+import com.example.mytodolist.database.dataClass.TodoDataClass
 import kotlinx.coroutines.flow.Flow
-import java.util.Date
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class TodoRepo(private val todoDao: TodoDao) {
+@Singleton
+class TodoRepo @Inject constructor(
+    private val todoDao: TodoDao,
+    private val todoCategoryDao: TodoCategoryDao
+) {
 
     val readAllTodo: Flow<List<TodoDataClass>> = todoDao.getAllTodos()
+    val readAllTodoCategory: Flow<List<TodoCategory>> = todoCategoryDao.getCategories()
 
+
+
+    suspend fun insertCategory(todoCategory: TodoCategory):Long{
+        return todoCategoryDao.insertCategory(todoCategory)
+    }
+    suspend fun deleteCategory(todoCategory: TodoCategory):Int{
+        return todoCategoryDao.deleteCategory(todoCategory)
+    }
     suspend fun createOrUpdate(todoDataClass: TodoDataClass) {
         todoDao.insertOrUpdate(todoDataClass)
     }
 
+
+    fun getTodosByCategory(categoryId:Long):Flow<List<TodoDataClass>>{
+       return todoDao.getTodosByCategory(categoryId)
+    }
+    suspend fun updateIsComplete(todoId: Long, isCompleteValue: Boolean){
+        todoDao.updateIsComplete(todoId,isCompleteValue)
+    }
     suspend fun deleteTodo(todoDataClass: TodoDataClass) {
         todoDao.deleteTodoById(todoDataClass)
     }
 
+    fun getCategoryById(categoryId: Long): LiveData<TodoCategory> {
+        return todoCategoryDao.getCategoryById(categoryId)
+    }
+
+    fun getCategoryIDByName(categoryName: String): LiveData<Long>{
+       return todoCategoryDao.getCategoryIDByName(categoryName)
+    }
+    fun isCategoryPresent(categoryId: Long):Boolean{
+        val category=todoCategoryDao.getCategoryById(categoryId).value
+        return category!=null
+    }
+    fun getAllCategoryNames():Flow<List<String>>{
+        return todoCategoryDao.getAllCategoryNames()
+    }
     fun getTotalTaskSize():LiveData<Int> {
         return todoDao.getTotalTaskSize()
     }
@@ -38,7 +76,7 @@ class TodoRepo(private val todoDao: TodoDao) {
         return todoDao.getTotalTaskSizeCompleted(isCompleted)
     }
 
-    fun getTaskByID(id: Int): LiveData<TodoDataClass> {
+    fun getTaskByID(id: Long): LiveData<TodoDataClass> {
         return todoDao.getTaskByID(id)
     }
 

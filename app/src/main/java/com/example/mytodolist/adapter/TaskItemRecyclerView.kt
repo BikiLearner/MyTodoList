@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mytodolist.Ui.AddNewTask
 import com.example.mytodolist.R
-import com.example.mytodolist.database.TodoDataClass
+import com.example.mytodolist.database.dataClass.TodoDataClass
 import kotlinx.coroutines.InternalCoroutinesApi
 import java.sql.Time
 import java.text.SimpleDateFormat

@@ -12,13 +12,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mytodolist.R
-import com.example.mytodolist.database.TodoDataClass
+import com.example.mytodolist.database.dataClass.TodoDataClass
 import com.example.mytodolist.database.TodoViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 import java.util.Date
-
+@AndroidEntryPoint
 class AllTaskActivity : AppCompatActivity() {
     private lateinit var todoViewModel: TodoViewModel
     private lateinit var  filterTextView:TextView
@@ -44,7 +46,7 @@ class AllTaskActivity : AppCompatActivity() {
             onBackPressedDispatcher.onBackPressed()
         }
 
-        todoViewModel = TodoViewModel(application)
+        todoViewModel = ViewModelProvider(this)[TodoViewModel::class.java]
 
         if(isTodayComplete){
             todoViewModel.getTaskByDateIsNotComplete(date = Date(),true) {
