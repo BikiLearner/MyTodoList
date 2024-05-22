@@ -34,6 +34,7 @@ public class AlarmReceiver extends BroadcastReceiver {
         Log.e("TODOIDNEw", "todoId: " + todoId);
         String taskName = intent.getStringExtra("taskName");
         int uniqueNotificationID = intent.getIntExtra(NotifyEnum.todoUniqueId.name(),-1);
+        Log.e("uniqueNotificationID", "uniqueNotificationID: " + uniqueNotificationID);
         String taskDesc = intent.getStringExtra("taskDesc");
 
         if (NotifyEnum.ALARMSTART.name().equals(intent.getAction())) {

@@ -12,6 +12,7 @@ import com.example.mytodolist.database.dataClass.TodoCategory
 import com.example.mytodolist.database.dataClass.TodoDataClass
 
 import com.example.mytodolist.functionallity.scheduleAlarm
+import com.example.mytodolist.functionallity.setForEveryWeekParticularDays
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -42,29 +43,30 @@ class TodoViewModel @Inject constructor(private val repo: TodoRepo) : ViewModel(
         date: Date,
         startTime: Time,
         endTime: Time,
-        context:Context,
-        categoryId: Long
+        context: Context,
+        categoryId: Long,
+        dayChipGroup: MutableList<Int>
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             val time = System.currentTimeMillis()
             val last4Digits = time.toString().takeLast(4)
             val notificationId = last4Digits.toInt()
 
-            if(categoryId==(-1).toLong()){
+            if (categoryId == (-1).toLong()) {
                 val todoDataClass = TodoDataClass(
                     todoId = todoId,
-                    taskName=taskName,
-                    taskDesc=taskDesc,
-                    date=date,
-                    startTime=startTime,
-                    endTime=endTime,
+                    taskName = taskName,
+                    taskDesc = taskDesc,
+                    date = date,
+                    startTime = startTime,
+                    endTime = endTime,
                     categoryID = repo.insertCategory(
-                        TodoCategory(categoryID = 0,categoryName=categoryName)
+                        TodoCategory(categoryID = 0, categoryName = categoryName)
                     ),
                     uniqueNotificationID = notificationId
                 )
-                addOrUpdateTodo(todoDataClass,context)
-            }else{
+                addOrUpdateTodo(todoDataClass, context, dayChipGroup)
+            } else {
                 val todoDataClass = TodoDataClass(
                     todoId = todoId,
                     taskName = taskName,
@@ -75,7 +77,7 @@ class TodoViewModel @Inject constructor(private val repo: TodoRepo) : ViewModel(
                     categoryID = categoryId,
                     uniqueNotificationID = notificationId
                 )
-                addOrUpdateTodo(todoDataClass, context)
+                addOrUpdateTodo(todoDataClass, context, dayChipGroup)
 
             }
         }
@@ -105,13 +107,15 @@ class TodoViewModel @Inject constructor(private val repo: TodoRepo) : ViewModel(
             }
         }
     }
-    fun getCategoryById(categoryId: Long):LiveData <TodoCategory>{
+
+    fun getCategoryById(categoryId: Long): LiveData<TodoCategory> {
         return repo.getCategoryById(categoryId)
     }
 
-    fun getCategoryIDByName(categoryName: String):LiveData<Long>{
+    fun getCategoryIDByName(categoryName: String): LiveData<Long> {
         return repo.getCategoryIDByName(categoryName)
     }
+
     fun insertCategory(todoCategory: TodoCategory) {
         viewModelScope.launch(Dispatchers.IO) {
             repo.insertCategory(todoCategory)
@@ -192,17 +196,49 @@ class TodoViewModel @Inject constructor(private val repo: TodoRepo) : ViewModel(
         }
     }
 
-    fun addOrUpdateTodo(todoDataClass: TodoDataClass, context: Context) {
+    fun addOrUpdateTodo(
+        todoDataClass: TodoDataClass,
+        context: Context,
+        dayChipGroup: MutableList<Int>
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             val id = repo.createOrUpdate(todoDataClass)
             Log.e("TheNewTodoID", "addOrUpdateTodo: $id")
-            if(id!=-1L){
-                scheduleAlarm(context,todoDataClass.copy(
-                    todoId = id
-                ))
+            if (id != -1L) {
+                if (dayChipGroup.isNotEmpty()) {
+                    setForEveryWeekParticularDays(context, todoDataClass, dayChipGroup)
+                } else {
+                    scheduleAlarm(
+                        context, todoDataClass.copy(
+                            todoId = id
+                        )
+                    )
+                }
+
             }
         }
     }
+
+    fun addOrUpdateTodo(
+        todoDataClass: TodoDataClass,
+        context: Context,
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            val id = repo.createOrUpdate(todoDataClass)
+            Log.e("TheNewTodoID", "addOrUpdateTodo: $id")
+            if (id != -1L) {
+
+                scheduleAlarm(
+                    context, todoDataClass.copy(
+                        todoId = id
+                    )
+                )
+
+
+            }
+        }
+    }
+
 
     fun deleteTodo(todoDataClass: TodoDataClass) {
         viewModelScope.launch(Dispatchers.IO) {

@@ -10,15 +10,15 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.mytodolist.R
 import com.example.mytodolist.database.dataClass.TodoDataClass
-
 import com.example.mytodolist.enums.NotifyEnum
 import java.util.Calendar
-import java.util.Random
+import java.util.Date
 
 
 fun scheduleAlarm(context: Context, todo: TodoDataClass) {
@@ -52,6 +52,50 @@ fun scheduleAlarm(context: Context, todo: TodoDataClass) {
 
 }
 
+fun setForEveryWeekParticularDays(context: Context, todo: TodoDataClass, range:MutableList<Int>) {
+    range.forEach {i->
+        setForDay(context, todo, i)
+    }
+}
+
+fun setForDay(context: Context, todo: TodoDataClass, dayOfWeek: Int) {
+    val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+    val intent = Intent(context, AlarmReceiver::class.java).apply {
+        action = NotifyEnum.ALARMSTART.name
+        putExtra(NotifyEnum.todoId.name, todo.todoId)
+        putExtra(NotifyEnum.todoUniqueId.name, todo.uniqueNotificationID)
+        when {
+            todo.taskName.isNotEmpty() -> putExtra("taskName", todo.taskName)
+            todo.taskDesc.isNotEmpty() -> putExtra("taskDesc", todo.taskDesc)
+        }
+    }
+
+    val pendingIntent = PendingIntent.getBroadcast(
+        context, todo.uniqueNotificationID,
+        intent, PendingIntent.FLAG_IMMUTABLE
+    )
+
+    val calendar = Calendar.getInstance().apply {
+        time = Date() // Current date and time
+        set(Calendar.DAY_OF_WEEK, dayOfWeek)
+        set(Calendar.HOUR_OF_DAY, todo.startTime.hours)
+        set(Calendar.MINUTE, todo.startTime.minutes)
+        set(Calendar.SECOND, 0)
+
+        // Check if the set time is before the current time
+        // If it is, add 7 days to schedule it for the next week
+        if (before(Calendar.getInstance())) {
+            add(Calendar.WEEK_OF_YEAR, 1)
+        }
+    }
+    Log.d("AlarmTest", "Setting alarm for day: $dayOfWeek at ${calendar.time}")
+    alarmManager.setRepeating(
+        AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY * 7,
+        pendingIntent
+    )
+}
+
 fun cancelAlarm(context: Context, uniqueNotificationID: Int) {
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
@@ -61,7 +105,7 @@ fun cancelAlarm(context: Context, uniqueNotificationID: Int) {
 
     }
     val pendingIntent = PendingIntent.getBroadcast(
-        context,  uniqueNotificationID,
+        context, uniqueNotificationID,
         intent, PendingIntent.FLAG_IMMUTABLE
     )
     alarmManager.cancel(pendingIntent)
@@ -73,13 +117,14 @@ fun updateNotificationAfterMarkComplete(
     taskName: String,
     taskDesc: String
 ) {
-    val builder = NotificationCompat.Builder(context, NotifyEnum.NotificationChannelID.name)
+    val notification = NotificationCompat.Builder(context, NotifyEnum.NotificationChannelID.name)
         .setSmallIcon(R.drawable.app_logo)
         .setContentTitle("Task Completed: $taskName") // Changed title
         .setContentText("Nice work! You've completed the task: $taskDesc") // Changed text
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setCategory(NotificationCompat.CATEGORY_REMINDER)
         .setOngoing(false)
+        .build()
 
     with(NotificationManagerCompat.from(context)) {
         if (ActivityCompat.checkSelfPermission(
@@ -89,16 +134,24 @@ fun updateNotificationAfterMarkComplete(
         ) {
             return
         }
-        notify(uniqueNotificationID, builder.build())
+        notify(uniqueNotificationID, notification)
     }
 }
-fun showNotification(context: Context, todoId: Long,uniqueNotificationID: Int, taskName: String, taskDesc: String) {
+
+fun showNotification(
+    context: Context,
+    todoId: Long,
+    uniqueNotificationID: Int,
+    taskName: String,
+    taskDesc: String
+) {
     createNotificationChannel(context)
 
 
     val intentForMarkComplete = Intent(context, AlarmReceiver::class.java).apply {
         action = NotifyEnum.MARKCOMPLETETODO.name
         putExtra(NotifyEnum.todoId.name, todoId)
+        putExtra(NotifyEnum.todoUniqueId.name, uniqueNotificationID)
         putExtra("taskName", taskName)
         putExtra("taskDesc", taskDesc)
     }
@@ -115,18 +168,19 @@ fun showNotification(context: Context, todoId: Long,uniqueNotificationID: Int, t
         .setPriority(NotificationCompat.PRIORITY_HIGH)
         .setCategory(NotificationCompat.CATEGORY_REMINDER)
         .setOngoing(true)
-        .addAction(R.drawable.taskdone,"MarkComplete",pendingIntentMarkComplete)
+        .addAction(R.drawable.taskdone, "MarkComplete", pendingIntentMarkComplete)
 
     with(NotificationManagerCompat.from(context)) {
         if (ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.POST_NOTIFICATIONS
             ) != PackageManager.PERMISSION_GRANTED
-        ) { return }
+        ) {
+            return
+        }
         notify(uniqueNotificationID, builder.build())
     }
 }
-
 
 
 fun createNotificationChannel(context: Context) {

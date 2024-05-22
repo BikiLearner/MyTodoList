@@ -1,6 +1,7 @@
 package com.example.mytodolist.Ui
 
 import android.app.DatePickerDialog
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.text.format.DateFormat.is24HourFormat
 import android.util.Log
@@ -13,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
@@ -21,6 +23,8 @@ import com.example.mytodolist.database.TodoViewModel
 
 import com.example.mytodolist.enums.IntentPassEnum
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.CalendarConstraints.DateValidator
 import com.google.android.material.datepicker.DateValidatorPointForward
@@ -33,6 +37,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.text.*
 
 
 @AndroidEntryPoint
@@ -126,6 +131,73 @@ class AddNewTask : AppCompatActivity() {
             categoryNameAutoCompleteTextView.setAdapter(arrayAdapter)
             categoryNameAutoCompleteTextView.setThreshold(1)
         }
+
+        dayChipGroup()
+
+    }
+
+    private fun dayChipGroup(): MutableList<Int> {
+        val dayChipGroup = findViewById<ChipGroup>(R.id.dayChipGroup)
+        val daysOfWeek = listOf("S", "M", "T", "W", "Th", "F", "Sa")
+        for (day in daysOfWeek) {
+            val chip = Chip(this)
+            chip.text = day
+            chip.isCheckable = true
+            chip.isCheckedIconVisible = true
+            chip.setChipBackgroundColorResource(R.color.white)
+            chip.setTextColor(ContextCompat.getColor(this,R.color.darkBlue))
+            chip.chipStrokeColor = ColorStateList.valueOf(ContextCompat.getColor(this,R.color.darkBlue))
+            chip.setEnsureMinTouchTargetSize(false)
+            dayChipGroup.addView(chip)
+        }
+        val selectedDays = mutableListOf<Int>()
+        dayChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+            selectedDays.clear()
+            dateTextView.text=""
+//            val isAllSelected = checkedIds.any { id ->
+//                val chip = group.findViewById<Chip>(id)
+//                chip.text.toString() == "All"
+//            }
+//            if (isAllSelected) {
+//                // Select all chips
+//                for (i in 0 until group.childCount) {
+//                    val chip = group.getChildAt(i) as Chip
+//                    chip.isChecked = true
+//                    if (chip.text.toString() != "All") {
+//                        dateTextView.append("EveryDay")
+//                        selectedDays.add(chip.text.toString())
+//                    }
+//                }
+//            } else {
+                // Handle normal selection
+                for (id in checkedIds) {
+
+                    val chip = group.findViewById<Chip>(id)
+                    chip.isChecked = true
+                    if (chip.text.toString() != "All") {
+                        Log.e("ChipID", chip.id.toString())
+                        dateTextView.append(chip.text.toString() + ", ")
+                        selectedDays.add(chip.id)
+                    }
+                }
+//            }
+//
+//            // If the "All" chip is deselected, deselect all other chips
+//            if (!isAllSelected) {
+//                for (i in 0 until group.childCount) {
+//                    val chip = group.getChildAt(i) as Chip
+//                    if (chip.text.toString() == "All" && !chip.isChecked) {
+//                        // Deselect all other chips
+//                        for (j in 0 until group.childCount) {
+//                            val otherChip = group.getChildAt(j) as Chip
+//                            otherChip.isChecked = false
+//                        }
+//                        break
+//                    }
+//                }
+//            }
+        }
+        return selectedDays
 
     }
 
@@ -255,7 +327,8 @@ class AddNewTask : AppCompatActivity() {
                 startTime = startTime,
                 endTime = endTime,
                 categoryName = categoryNameAutoCompleteTextView.text.toString(),
-                categoryId = selectedCategoryId ?: -1
+                categoryId = selectedCategoryId ?: -1,
+                dayChipGroup = dayChipGroup()
             )
             onBackPressedDispatcher.onBackPressed()
         } else {
@@ -265,7 +338,5 @@ class AddNewTask : AppCompatActivity() {
     }
 
 
-    // TODO(
-//      1 Fix getCategoryByID 2 FixNotification,
-//  )
+    // TODO(1 Fix getCategoryByID 2 FixNotification)
 }
