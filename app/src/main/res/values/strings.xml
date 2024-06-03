@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">MyTODOList</string>
+    <string name="ringtone">Ringtone</string>
+    <string name="repeat">Repeat</string>
+    <string name="description">Description</string>
+    <string name="reminde_me">Reminde me</string>
+    <string name="date">Date</string>
+    <string name="task_name">Task Name</string>
+    <string name="select_category">Select Category</string>
+    <string name="task_category">Task Category</string>
+    <string name="button_to_delete_todo">Button To delete Todo</string>
+    <string name="button_to_go_back_to_home_page">Button To go back to Home Page</string>
+    <string name="addtask">AddTask</string>
+    <string name="save_task">Save Task</string>
 </resources>

@@ -45,7 +45,7 @@ class TodoViewModel @Inject constructor(private val repo: TodoRepo) : ViewModel(
         endTime: Time,
         context: Context,
         categoryId: Long,
-        dayChipGroup: MutableList<Int>
+        dayChipGroup: List<Int>
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             val time = System.currentTimeMillis()
@@ -199,13 +199,14 @@ class TodoViewModel @Inject constructor(private val repo: TodoRepo) : ViewModel(
     fun addOrUpdateTodo(
         todoDataClass: TodoDataClass,
         context: Context,
-        dayChipGroup: MutableList<Int>
+        dayChipGroup: List<Int>
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             val id = repo.createOrUpdate(todoDataClass)
             Log.e("TheNewTodoID", "addOrUpdateTodo: $id")
             if (id != -1L) {
                 if (dayChipGroup.isNotEmpty()) {
+                    Log.e("TheNewTodoIDSize", "addOrUpdateTodo: ${dayChipGroup.size}")
                     setForEveryWeekParticularDays(context, todoDataClass, dayChipGroup)
                 } else {
                     scheduleAlarm(

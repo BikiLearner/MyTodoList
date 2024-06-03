@@ -52,7 +52,8 @@ fun scheduleAlarm(context: Context, todo: TodoDataClass) {
 
 }
 
-fun setForEveryWeekParticularDays(context: Context, todo: TodoDataClass, range:MutableList<Int>) {
+fun setForEveryWeekParticularDays(context: Context, todo: TodoDataClass, range: List<Int>) {
+    Log.e("EveryDay", "setForEveryWeekParticularDays: ")
     range.forEach {i->
         setForDay(context, todo, i)
     }

@@ -17,52 +17,57 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.core.net.toUri
 import com.example.mytodolist.R
 import com.example.mytodolist.enums.NotifyEnum
+import java.io.File
+
 
 class RingtonePlayingService : Service() {
     private val CHANNEL_ID = "ringtone_channel"
     private var mediaPlayer: MediaPlayer? = null
-    private var uniqueNotificationID : Int = -1
+    private var uniqueNotificationID: Int = -1
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        // Get the ringtone URI from the intent
-        uniqueNotificationID = intent!!.getIntExtra("uniqueNotificationID", -1)
-        val ringtoneUri = intent.getStringExtra("ringtone-uri")?.toUri()
-            ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
-        val todoId=intent.getLongExtra(NotifyEnum.todoId.name, -1)
-        Log.d("RingtoneService", "Ringtone TOdoID: $todoId")
-
-        // Create a media player to play the ringtone
-        mediaPlayer = MediaPlayer.create(this, ringtoneUri)
-        Log.d("RingtoneService", "Media player created: $mediaPlayer")
-        mediaPlayer?.isLooping = true
-        mediaPlayer?.start()
-        createNotificationChannel()
-        // Start the service in the foreground so that it can continue to play the ringtone even if the app is not in the foreground
-
-        startForeground(uniqueNotificationID, showNotification(
-            this,
-            todoId,
-            uniqueNotificationID,
-            intent.getStringExtra("taskName") ?: "",
-            intent.getStringExtra("taskDesc") ?: ""
-        ))
+        intent?.let { it ->
+            uniqueNotificationID = it.getIntExtra("uniqueNotificationID", -1)
+            val ringtoneUri = it.getStringExtra("ringtone-uri")?.toUri()
+                ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
+            val todoId = it.getLongExtra(NotifyEnum.todoId.name, -1)
+            val taskName = it.getStringExtra("taskName") ?: ""
+            val taskDesc = it.getStringExtra("taskDesc") ?: ""
 
 
+            try {
+                // Create and start the media player
+                val file = File(ringtoneUri.toString())
+                if (file.exists()) {
+                    mediaPlayer = MediaPlayer.create(applicationContext, ringtoneUri)
+                    mediaPlayer?.start()
+                }
+            } catch (e: Exception) {
+                Log.e("RingtoneService", "Error initializing media player", e)
+                stopSelf(startId)
+                return START_NOT_STICKY
+            }
+            // Create and start the foreground notification
+            createNotificationChannel()
 
+            startForeground(
+                uniqueNotificationID,
+                showNotification(this, todoId, uniqueNotificationID, taskName, taskDesc)
+            )
+        } ?: run {
+            stopSelf(startId)
+        }
         return START_STICKY
     }
 
     private fun showNotification(
-        context: Context, todoId: Long, uniqueNotificationID:
-        Int, taskName: String, taskDesc: String
+        context: Context, todoId: Long, uniqueNotificationID: Int,
+        taskName: String, taskDesc: String
     ): Notification {
-        createNotificationChannel(context)
-
-
         val intentForMarkComplete = Intent(context, AlarmReceiver::class.java).apply {
             action = NotifyEnum.MARKCOMPLETETODO.name
             putExtra(NotifyEnum.todoId.name, todoId)
@@ -78,33 +83,28 @@ class RingtonePlayingService : Service() {
         }
 
         val pendingIntentMarkComplete = PendingIntent.getBroadcast(
-            context, uniqueNotificationID,
-            intentForMarkComplete, PendingIntent.FLAG_IMMUTABLE
+            context, uniqueNotificationID, intentForMarkComplete, PendingIntent.FLAG_IMMUTABLE
         )
         val pendingIntentStopAlarm = PendingIntent.getBroadcast(
-            context, uniqueNotificationID,
-            intentForStopAlarm, PendingIntent.FLAG_IMMUTABLE
+            context, uniqueNotificationID, intentForStopAlarm, PendingIntent.FLAG_IMMUTABLE
         )
-        val notification = NotificationCompat.Builder(context, NotifyEnum.NotificationChannelID.name)
+
+        return NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.app_logo)
-            .setContentTitle("Your Task : $taskName")
+            .setContentTitle("Your Task: $taskName")
             .setContentText(taskDesc)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setCategory(NotificationCompat.CATEGORY_REMINDER)
             .setOngoing(true)
-            .addAction(R.drawable.taskdone, "MarkComplete", pendingIntentMarkComplete)
+            .addAction(R.drawable.taskdone, "Mark Complete", pendingIntentMarkComplete)
             .addAction(0, "Stop Alarm", pendingIntentStopAlarm)
             .build()
-
-        return notification;
     }
 
     private fun createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                CHANNEL_ID,
-                "Ringtone Service Channel",
-                NotificationManager.IMPORTANCE_DEFAULT
+                CHANNEL_ID, "Ringtone Service Channel", NotificationManager.IMPORTANCE_DEFAULT
             )
             val notificationManager =
                 getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -114,13 +114,13 @@ class RingtonePlayingService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        val notificationManager = NotificationManagerCompat.from(this)
-        notificationManager.cancel(uniqueNotificationID)
-        // Stop the media player and release resources
         mediaPlayer?.stop()
         mediaPlayer?.release()
         mediaPlayer = null
+
+        if (uniqueNotificationID != -1) {
+            val notificationManager = NotificationManagerCompat.from(this)
+            notificationManager.cancel(uniqueNotificationID)
+        }
     }
-
-
 }
