@@ -33,7 +33,6 @@ class RingtonePlayingService : Service() {
         intent?.let { it ->
             uniqueNotificationID = it.getIntExtra("uniqueNotificationID", -1)
             val ringtoneUri = it.getStringExtra("ringtone-uri")?.toUri()
-                ?: RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM)
             val todoId = it.getLongExtra(NotifyEnum.todoId.name, -1)
             val taskName = it.getStringExtra("taskName") ?: ""
             val taskDesc = it.getStringExtra("taskDesc") ?: ""
@@ -44,6 +43,9 @@ class RingtonePlayingService : Service() {
                 val file = File(ringtoneUri.toString())
                 if (file.exists()) {
                     mediaPlayer = MediaPlayer.create(applicationContext, ringtoneUri)
+                    mediaPlayer?.start()
+                }else{
+                    mediaPlayer = MediaPlayer.create(applicationContext, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))
                     mediaPlayer?.start()
                 }
             } catch (e: Exception) {

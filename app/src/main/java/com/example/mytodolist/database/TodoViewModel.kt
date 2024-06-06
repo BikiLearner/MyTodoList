@@ -41,11 +41,9 @@ class TodoViewModel @Inject constructor(private val repo: TodoRepo) : ViewModel(
         taskName: String,
         taskDesc: String,
         date: Date,
-        startTime: Time,
-        endTime: Time,
+        startTime: Long,
         context: Context,
         categoryId: Long,
-        dayChipGroup: List<Int>
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             val time = System.currentTimeMillis()
@@ -59,13 +57,12 @@ class TodoViewModel @Inject constructor(private val repo: TodoRepo) : ViewModel(
                     taskDesc = taskDesc,
                     date = date,
                     startTime = startTime,
-                    endTime = endTime,
                     categoryID = repo.insertCategory(
                         TodoCategory(categoryID = 0, categoryName = categoryName)
                     ),
                     uniqueNotificationID = notificationId
                 )
-                addOrUpdateTodo(todoDataClass, context, dayChipGroup)
+                addOrUpdateTodo(todoDataClass, context)
             } else {
                 val todoDataClass = TodoDataClass(
                     todoId = todoId,
@@ -73,11 +70,10 @@ class TodoViewModel @Inject constructor(private val repo: TodoRepo) : ViewModel(
                     taskDesc = taskDesc,
                     date = date,
                     startTime = startTime,
-                    endTime = endTime,
                     categoryID = categoryId,
                     uniqueNotificationID = notificationId
                 )
-                addOrUpdateTodo(todoDataClass, context, dayChipGroup)
+                addOrUpdateTodo(todoDataClass, context)
 
             }
         }
@@ -196,7 +192,7 @@ class TodoViewModel @Inject constructor(private val repo: TodoRepo) : ViewModel(
         }
     }
 
-    fun addOrUpdateTodo(
+    private fun addOrUpdateTodo(
         todoDataClass: TodoDataClass,
         context: Context,
         dayChipGroup: List<Int>
@@ -220,7 +216,7 @@ class TodoViewModel @Inject constructor(private val repo: TodoRepo) : ViewModel(
         }
     }
 
-    fun addOrUpdateTodo(
+    private fun addOrUpdateTodo(
         todoDataClass: TodoDataClass,
         context: Context,
     ) {
@@ -228,14 +224,11 @@ class TodoViewModel @Inject constructor(private val repo: TodoRepo) : ViewModel(
             val id = repo.createOrUpdate(todoDataClass)
             Log.e("TheNewTodoID", "addOrUpdateTodo: $id")
             if (id != -1L) {
-
                 scheduleAlarm(
                     context, todoDataClass.copy(
                         todoId = id
                     )
                 )
-
-
             }
         }
     }

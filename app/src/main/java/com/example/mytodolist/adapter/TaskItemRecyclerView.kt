@@ -30,6 +30,7 @@ class TaskItemRecyclerView(
         val editTaskButtonList: ImageButton = itemView.findViewById(R.id.editTaskButtonList)
         val deleteTaskButtonList: ImageButton = itemView.findViewById(R.id.deleteTaskButtonList)
         val taskDoneButton: ImageButton = itemView.findViewById(R.id.taskDoneButton)
+        val descriptionTv: TextView = itemView.findViewById(R.id.descriptionTv)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -43,9 +44,9 @@ class TaskItemRecyclerView(
         if (position < todoDataClasses.size) {
             val todoDataClass = todoDataClasses.get(position)
             holder.titleTv.text = todoDataClass.taskName
-            val timeFormated =
-                "${getTimeFormated(todoDataClass.startTime)} : ${getTimeFormated(todoDataClass.endTime)}"
-            holder.timeStartToEndTv.text = timeFormated
+
+
+            holder.timeStartToEndTv.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(todoDataClass.startTime)
             val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
             val formattedDate = dateFormat.format(todoDataClass.date)
             holder.dateTextView.text = formattedDate
@@ -55,6 +56,7 @@ class TaskItemRecyclerView(
             } else {
                 holder.taskDoneButton.setImageResource(R.drawable.taskdone)
             }
+            holder.descriptionTv.text = todoDataClass.taskDesc.ifEmpty { "No Description" }
 
             holder.itemView.setOnClickListener {
                 val intent = Intent(context, AddNewTask::class.java)
@@ -76,6 +78,7 @@ class TaskItemRecyclerView(
             holder.taskDoneButton.setOnClickListener {
                 taskComplete(todoDataClass)
             }
+
         }
     }
 

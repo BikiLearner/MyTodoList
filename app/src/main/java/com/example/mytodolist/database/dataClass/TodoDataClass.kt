@@ -1,11 +1,8 @@
 package com.example.mytodolist.database.dataClass
 
-import androidx.room.ColumnInfo
 import androidx.room.Entity
-import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import java.sql.Time
 import java.util.Date
 
 @Entity(tableName = "TodoListTable",
@@ -17,8 +14,7 @@ data class TodoDataClass(
     val taskName:String,
     val taskDesc:String,
     val date: Date,
-    val startTime: Time,
-    val endTime:Time,
+    val startTime: Long,
     val isComplete:Boolean=false,
     val categoryID:Long,
     val uniqueNotificationID:Int

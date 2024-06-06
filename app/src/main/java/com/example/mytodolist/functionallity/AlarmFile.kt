@@ -37,16 +37,8 @@ fun scheduleAlarm(context: Context, todo: TodoDataClass) {
         intent, PendingIntent.FLAG_IMMUTABLE
     )
 
-
-    val calendar = Calendar.getInstance().apply {
-        time = todo.date
-        set(Calendar.HOUR_OF_DAY, todo.startTime.hours)
-        set(Calendar.MINUTE, todo.startTime.minutes)
-        set(Calendar.SECOND, 0)
-    }
-
     alarmManager.setExactAndAllowWhileIdle(
-        AlarmManager.RTC_WAKEUP, calendar.timeInMillis,
+        AlarmManager.RTC_WAKEUP, todo.startTime,
         pendingIntent
     )
 
@@ -77,22 +69,10 @@ fun setForDay(context: Context, todo: TodoDataClass, dayOfWeek: Int) {
         intent, PendingIntent.FLAG_IMMUTABLE
     )
 
-    val calendar = Calendar.getInstance().apply {
-        time = Date() // Current date and time
-        set(Calendar.DAY_OF_WEEK, dayOfWeek)
-        set(Calendar.HOUR_OF_DAY, todo.startTime.hours)
-        set(Calendar.MINUTE, todo.startTime.minutes)
-        set(Calendar.SECOND, 0)
 
-        // Check if the set time is before the current time
-        // If it is, add 7 days to schedule it for the next week
-        if (before(Calendar.getInstance())) {
-            add(Calendar.WEEK_OF_YEAR, 1)
-        }
-    }
-    Log.d("AlarmTest", "Setting alarm for day: $dayOfWeek at ${calendar.time}")
+
     alarmManager.setRepeating(
-        AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY * 7,
+        AlarmManager.RTC_WAKEUP, todo.startTime, AlarmManager.INTERVAL_DAY * 7,
         pendingIntent
     )
 }

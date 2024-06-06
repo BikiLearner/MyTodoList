@@ -6,4 +6,11 @@
     </style>
 
     <style name="Theme.MyTODOList" parent="Base.Theme.MyTODOList" />
+
+    <style name="MyCustomExposedDropdownMenu" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <!-- Customize attributes here -->
+        <item name="boxStrokeColor">@color/gray</item>
+
+        <!-- Add more customizations as needed -->
+    </style>
 </resources>

@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mytodolist.R
 import com.example.mytodolist.database.dataClass.TodoDataClass
 import com.example.mytodolist.database.TodoViewModel
+import com.example.mytodolist.reusePackage.datePicker
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 import java.util.Date
@@ -119,31 +120,13 @@ class AllTaskActivity : AppCompatActivity() {
                 }
             }
             R.id.calender -> {
-                forCalenderFun()
+                datePicker({selectedDate->
+                    todoViewModel.getTaskByDate(selectedDate.time) {
+                        inflateWithValues(it)
+                    }
+                }, this)
             }
         }
-    }
-
-    private fun forCalenderFun() {
-        val calendar = Calendar.getInstance()
-        val datePickerDialog = DatePickerDialog(
-            this,
-            { _, year, monthOfYear, dayOfMonth ->
-                val selectedDate = Calendar.getInstance()
-                selectedDate.set(Calendar.YEAR, year)
-                selectedDate.set(Calendar.MONTH, monthOfYear)
-                selectedDate.set(Calendar.DAY_OF_MONTH, dayOfMonth)
-                todoViewModel.getTaskByDate(selectedDate.time){
-                    inflateWithValues(it)
-                }
-
-            },
-            calendar.get(Calendar.YEAR),
-            calendar.get(Calendar.MONTH),
-            calendar.get(Calendar.DAY_OF_MONTH)
-        )
-
-        datePickerDialog.show()
     }
 
 }

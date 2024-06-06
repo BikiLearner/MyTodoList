@@ -7,9 +7,21 @@
     <string name="date">Date</string>
     <string name="task_name">Task Name</string>
     <string name="select_category">Select Category</string>
+    <string name="edit_Done">Edit Done</string>
+    <string name="edit_task">Edit Task</string>
     <string name="task_category">Task Category</string>
     <string name="button_to_delete_todo">Button To delete Todo</string>
     <string name="button_to_go_back_to_home_page">Button To go back to Home Page</string>
     <string name="addtask">AddTask</string>
     <string name="save_task">Save Task</string>
+    <string name="repeats">Repeats</string>
+    <string name="every">Every</string>
+    <string name="_1">1</string>
+    <string name="week">Week</string>
+    <string name="ends">Ends</string>
+    <string name="never">Never</string>
+    <string name="on">On</string>
+    <string name="after">After</string>
+    <string name="occurrences">occurrences</string>
+    <string name="done">Done</string>
 </resources>
