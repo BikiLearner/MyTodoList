@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mytodolist.Ui.AddNewTask
 import com.example.mytodolist.R
 import com.example.mytodolist.database.dataClass.TodoDataClass
+import com.example.mytodolist.enums.IntentPassEnum
 import kotlinx.coroutines.InternalCoroutinesApi
 import java.sql.Time
 import java.text.SimpleDateFormat
@@ -60,15 +61,15 @@ class TaskItemRecyclerView(
 
             holder.itemView.setOnClickListener {
                 val intent = Intent(context, AddNewTask::class.java)
-                intent.putExtra("TaskID", todoDataClass.todoId)
-                intent.putExtra("isEdit", true)
+                intent.putExtra(IntentPassEnum.TASKID.name, todoDataClass.todoId)
+                intent.putExtra(IntentPassEnum.ISEDIT.name, true)
                 context.startActivity(intent)
             }
 
             holder.editTaskButtonList.setOnClickListener {
                 val intent = Intent(context, AddNewTask::class.java)
-                intent.putExtra("TaskID", todoDataClass.todoId)
-                intent.putExtra("isEdit", true)
+                intent.putExtra(IntentPassEnum.TASKID.name, todoDataClass.todoId)
+                intent.putExtra(IntentPassEnum.ISEDIT.name, true)
                 context.startActivity(intent)
             }
 

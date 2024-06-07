@@ -10,7 +10,7 @@ import com.example.mytodolist.database.dataClass.TodoDataClass
 
 
 @Database(entities = [TodoDataClass::class,TodoCategory::class],
-    version = 2, exportSchema = false)
+    version = 3, exportSchema = false)
 @TypeConverters(Converter::class)
 abstract class TodoDatabase : RoomDatabase() {
     abstract fun todoDao(): TodoDao

@@ -17,6 +17,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.ViewModelProvider
 import com.example.mytodolist.R
 import com.example.mytodolist.database.TodoViewModel
+import com.example.mytodolist.database.dataClass.RepeatModel
 import com.example.mytodolist.enums.IntentPassEnum
 import com.example.mytodolist.reusePackage.datePicker
 import com.example.mytodolist.reusePackage.showTimePickerDialog
@@ -40,6 +41,8 @@ class AddNewTask : AppCompatActivity() {
     private var startTime by Delegates.notNull<Long>()
     private lateinit var todoViewModel: TodoViewModel
     private lateinit var deleteButton: ImageButton
+    private  var repeatModel: RepeatModel?=null
+    private lateinit var  repeatsBottomSheet:RepeatsBottomSheetClass
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,7 +53,7 @@ class AddNewTask : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+        repeatsBottomSheet = RepeatsBottomSheetClass(this)
         val todoId = intent.getLongExtra(IntentPassEnum.TASKID.name, 0)
         val isEdit = intent.getBooleanExtra(IntentPassEnum.ISEDIT.name, false)
 
@@ -83,7 +86,7 @@ class AddNewTask : AppCompatActivity() {
 
         dateTextView.setOnClickListener {
             datePicker({
-                date = Date(it.timeInMillis)
+                date = it.time
                 dateTextView.text = SimpleDateFormat("MMMM d yyyy", Locale.getDefault()).format(it.timeInMillis)
             }, context = this)
         }
@@ -110,15 +113,36 @@ class AddNewTask : AppCompatActivity() {
             categoryNameAutoCompleteTextView.setThreshold(1)
         }
 
-        val repeatsBottomSheet = RepeatsBottomSheetClass(this)
+
         repeatButton.setOnClickListener {
-            repeatsBottomSheet.showBottomSheet()
+            repeatsBottomSheet.showBottomSheet{repeatMode->
+                repeatModel = repeatMode
+            }
         }
 
 
     }
 
     private fun setDataToViews(todoId: Long) {
+        todoViewModel.getTaskByID(todoId).observe(this){todoData->
+
+            taskNameEditText.setText(todoData.taskName)
+            descriptionEditText.setText(todoData.taskDesc)
+            date=todoData.date
+            startTime=todoData.startTime
+            dateTextView.text = SimpleDateFormat("MMMM d yyyy", Locale.getDefault()).format(todoData.date)
+            startTimeEdittext.text = SimpleDateFormat("HH:mm", Locale.getDefault()).format(todoData.startTime)
+
+            todoViewModel.getCategoryById(todoData.categoryID).observe(this){
+                if(it!=null){
+                    categoryNameAutoCompleteTextView.setText(it.categoryName)
+                }else{
+                    categoryNameAutoCompleteTextView.setText("")
+                }
+            }
+            repeatModel=todoData.repeat
+            repeatsBottomSheet.setUpdateRepeat(repeatModel!!)
+        }
 
     }
 
@@ -132,7 +156,8 @@ class AddNewTask : AppCompatActivity() {
         val taskDesc = descriptionEditText.text.toString()
         val selectedCategoryName = categoryNameAutoCompleteTextView.text.toString()
         if (selectedCategoryName.isNotEmpty() &&
-            taskName.isNotEmpty() && startTime != 0L
+            taskName.isNotEmpty() && startTime != 0L &&
+            date != null
         ) {
             val selectedCategoryId = todoViewModel.getCategoryIDByName(selectedCategoryName).value
             todoViewModel.createTodoCategoryIDAndInsert(
@@ -140,10 +165,11 @@ class AddNewTask : AppCompatActivity() {
                 todoId = todoId,
                 taskName = taskName,
                 taskDesc = taskDesc,
-                date = date ?: Date(System.currentTimeMillis()),
+                date = date!!,
                 startTime = startTime,
                 categoryName = categoryNameAutoCompleteTextView.text.toString(),
                 categoryId = selectedCategoryId ?: -1,
+                repeatModel = repeatModel?:RepeatModel()
             )
             onBackPressedDispatcher.onBackPressed()
         } else {
@@ -153,5 +179,4 @@ class AddNewTask : AppCompatActivity() {
     }
 
 
-    // TODO(1 Fix getCategoryByID 2 FixNotification)
 }

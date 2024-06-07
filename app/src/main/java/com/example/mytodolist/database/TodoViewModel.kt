@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.mytodolist.adapter.TaskItemRecyclerView
+import com.example.mytodolist.database.dataClass.RepeatModel
 import com.example.mytodolist.database.dataClass.TodoCategory
 import com.example.mytodolist.database.dataClass.TodoDataClass
 
@@ -17,7 +18,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import java.sql.Time
 import java.util.Date
 import javax.inject.Inject
 
@@ -44,6 +44,7 @@ class TodoViewModel @Inject constructor(private val repo: TodoRepo) : ViewModel(
         startTime: Long,
         context: Context,
         categoryId: Long,
+        repeatModel: RepeatModel,
     ) {
         viewModelScope.launch(Dispatchers.IO) {
             val time = System.currentTimeMillis()
@@ -51,16 +52,20 @@ class TodoViewModel @Inject constructor(private val repo: TodoRepo) : ViewModel(
             val notificationId = last4Digits.toInt()
 
             if (categoryId == (-1).toLong()) {
+                val categoryID = repo.insertCategory(
+                    TodoCategory(categoryID = 0, categoryName = categoryName)
+                )
+                Log.e("categoryId", "createTodoCategoryIDAndInsert: $categoryID")
                 val todoDataClass = TodoDataClass(
                     todoId = todoId,
                     taskName = taskName,
                     taskDesc = taskDesc,
                     date = date,
                     startTime = startTime,
-                    categoryID = repo.insertCategory(
-                        TodoCategory(categoryID = 0, categoryName = categoryName)
-                    ),
-                    uniqueNotificationID = notificationId
+                    categoryID =categoryID,
+                    uniqueNotificationID = notificationId,
+                    repeat = repeatModel
+
                 )
                 addOrUpdateTodo(todoDataClass, context)
             } else {
@@ -71,7 +76,8 @@ class TodoViewModel @Inject constructor(private val repo: TodoRepo) : ViewModel(
                     date = date,
                     startTime = startTime,
                     categoryID = categoryId,
-                    uniqueNotificationID = notificationId
+                    uniqueNotificationID = notificationId,
+                    repeat = repeatModel
                 )
                 addOrUpdateTodo(todoDataClass, context)
 

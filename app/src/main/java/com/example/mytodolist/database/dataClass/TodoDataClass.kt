@@ -1,5 +1,6 @@
 package com.example.mytodolist.database.dataClass
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
@@ -13,9 +14,11 @@ data class TodoDataClass(
     val todoId:Long,
     val taskName:String,
     val taskDesc:String,
-    val date: Date,
+    val date: Date?,
     val startTime: Long,
     val isComplete:Boolean=false,
     val categoryID:Long,
-    val uniqueNotificationID:Int
+    val uniqueNotificationID:Int,
+    @Embedded
+    val repeat:RepeatModel?=null
 )
