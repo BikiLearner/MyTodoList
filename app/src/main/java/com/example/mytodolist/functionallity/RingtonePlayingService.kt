@@ -55,10 +55,11 @@ class RingtonePlayingService : Service() {
             }
             // Create and start the foreground notification
             createNotificationChannel()
+            val notification= showNotification(this, todoId, uniqueNotificationID, taskName, taskDesc)
 
             startForeground(
                 uniqueNotificationID,
-                showNotification(this, todoId, uniqueNotificationID, taskName, taskDesc)
+              notification
             )
         } ?: run {
             stopSelf(startId)
@@ -101,6 +102,7 @@ class RingtonePlayingService : Service() {
             .addAction(R.drawable.taskdone, "Mark Complete", pendingIntentMarkComplete)
             .addAction(0, "Stop Alarm", pendingIntentStopAlarm)
             .build()
+
     }
 
     private fun createNotificationChannel() {
